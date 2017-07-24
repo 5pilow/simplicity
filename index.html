@@ -1,29 +1,29 @@
 
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 	<head>
-			
+
 		<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 
 		<title>Simplicity</title>
-		
-		<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+
+		<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-			
+
 		<script>
-			
+
 			var pos = [
 				[0, 1], [2, 0], [1, 2], [2, 2]
 			]
-			
+
 			var update = function() {
 				for (var i = 0; i < 4; ++i) $('#piece' + (i + 1)).css('left', pos[i][0] * 100).css('top',  pos[i][1] * 100)
-				
+
 				$('#win').toggle(pos[3][0] == 0 && pos[3][1] == 0)
 			}
-			
+
 			var canMove = function(piece, dir) {
-				var p = pos[piece] 
+				var p = pos[piece]
 				if (dir == 'left') {
 					if (p[0] == 0) return false
 					if (pieceAt(p[0] - 1, p[1])) return false
@@ -53,7 +53,7 @@
 				}
 				return true;
 			}
-			
+
 			var pieceAt = function(x, y) {
 				for (var i = 0; i < 4; ++i) {
 					var p = pos[i]
@@ -72,7 +72,7 @@
 				}
 				return false
 			}
-			
+
 			var move = function(dir) {
 				for (var i = 0; i < 4; ++i) {
 					if (canMove(i, dir)) {
@@ -94,11 +94,11 @@
 				if (canMove(piece, dir)) doMove(piece, dir)
 				if (two && canMove(piece, dir)) doMove(piece, dir)
 			}
-			
+
 			$(document).ready(function() {
-				
+
 				$(window).keyup(function(e) {
-					
+
 					if (e.keyCode == 37) move('left')
 					if (e.keyCode == 38) move('up')
 					if (e.keyCode == 39) move('right')
@@ -128,12 +128,12 @@
 					}
 					movePos = null
 				})
-				
+
 				update()
 			})
- 			
+
 		</script>
-		
+
 		<style>
 			html {
 				background: #ddd;
@@ -156,15 +156,15 @@
 				border-radius: 15px;
 				margin: 50px auto;
 				border: 45px solid #777;
-				-webkit-user-select: none; 
-				-moz-user-select: none;  
+				-webkit-user-select: none;
+				-moz-user-select: none;
 				-ms-user-select: none;
 			}
 			.piece {
 				position: absolute;
-				-webkit-user-select: none; 
-				-moz-user-select: none;  
-				-ms-user-select: none; 
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
 				transition: all 0.3s;
 			}
 			.piece > div {
@@ -173,8 +173,8 @@
 				display: inline-block;
 				overflow: hidden;
 				vertical-align: top;
-				-webkit-user-select: none; 
-				-moz-user-select: none;  
+				-webkit-user-select: none;
+				-moz-user-select: none;
 				-ms-user-select: none;
 				cursor: move;
 
@@ -239,7 +239,7 @@
 	</head>
 
 	<body>
-		
+
 		<div id='center'>
 			<h1>Simplicity</h1>
 			<div id='game'>
@@ -261,6 +261,6 @@
 			<center><div id='win'><h2>Win !</h2></div></center><br><br>
 			<center><a target='_blank' href='http://puzzlebeast.com/slidingblock/index.html'>Original sliding-piece puzzle by <b>Jimmy Stephens</b></a></center>
 		</div>
-	
+
 	</body>
 </html>
