@@ -1,3 +1,4 @@
+
 <!DOCTYPE html> 
 <html>
 	<head>
@@ -6,6 +7,7 @@
 
 		<title>Simplicity</title>
 		
+		<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 			
 		<script>
@@ -29,13 +31,15 @@
 				}
 				if (dir == 'right') {
 					if (piece == 2 && p[0] == 3) return false
-					if (p[0] == 2) return false
+					if (piece != 2 && p[0] == 2) return false
 					if (piece != 0 && pieceAt(p[0] + 1, p[1])) return false
 					if (piece == 0 && pieceAt(p[0] + 2, p[1])) return false
 					if ((piece == 1 || piece == 3) && pieceAt(p[0] + 2, p[1] + 1)) return false
+					if (piece == 2 && pieceAt(p[0] + 1, p[1] + 1)) return false
 				}
 				if (dir == 'up') {
 					if (p[1] == 0) return false
+					if (piece == 0 && pieceAt(p[0] + 1, p[1] - 1)) return false
 					if (pieceAt(p[0], p[1] - 1)) return false
 					if ((piece == 1 || piece == 3) && pieceAt(p[0] + 1, p[1])) return false
 				}
@@ -72,24 +76,57 @@
 			var move = function(dir) {
 				for (var i = 0; i < 4; ++i) {
 					if (canMove(i, dir)) {
-						if (dir == 'left') pos[i][0]--
-						if (dir == 'up') pos[i][1]--
-						if (dir == 'right') pos[i][0]++
-						if (dir == 'down') pos[i][1]++
-						update()
+						doMove(i, dir)
 						break;
 					}
 				}
 			}
+
+			var doMove = function(piece, dir) {
+				if (dir == 'left') pos[piece][0]--
+				if (dir == 'up') pos[piece][1]--
+				if (dir == 'right') pos[piece][0]++
+				if (dir == 'down') pos[piece][1]++
+				update()
+			}
+
+			var movePiece = function(piece, dir, two) {
+				if (canMove(piece, dir)) doMove(piece, dir)
+				if (two && canMove(piece, dir)) doMove(piece, dir)
+			}
 			
 			$(document).ready(function() {
 				
-				$(window).keyup(function(e) {
+				$(window).keyup(function(e) {
 					
 					if (e.keyCode == 37) move('left')
 					if (e.keyCode == 38) move('up')
 					if (e.keyCode == 39) move('right')
 					if (e.keyCode == 40) move('down')
+				})
+
+				var movePos = null
+				var movedPiece = null
+
+				$('.piece > div').mousedown(function(e) {
+					movePos = {x: e.pageX, y: e.pageY}
+					movedPiece = parseInt($(this).parent().attr('id').substring(5)) - 1
+				})
+
+				$('html').mouseup(function(e) {
+					if (movePos == null) return null
+					var delta = {x: e.pageX - movePos.x, y: e.pageY - movePos.y}
+
+					if (Math.abs(delta.x) > Math.abs(delta.y)) {
+						var two = Math.abs(delta.x) > 100
+						if (delta.x > 0) movePiece(movedPiece, 'right', two)
+						else movePiece(movedPiece, 'left', two)
+					} else {
+						var two = Math.abs(delta.y) > 100
+						if (delta.y > 0) movePiece(movedPiece, 'down', two)
+						else movePiece(movedPiece, 'up', two)
+					}
+					movePos = null
 				})
 				
 				update()
@@ -100,6 +137,16 @@
 		<style>
 			html {
 				background: #ddd;
+				font-family: 'Pacifico', cursive;
+			}
+			h1 {
+				color: #666;
+				font-weight: normal;
+				font-size: 50px;
+			}
+			#center {
+				width: 500px;
+				margin: 0 auto;
 			}
 			#game {
 				width: 400px;
@@ -107,14 +154,18 @@
 				background: #666;
 				position: relative;
 				border-radius: 15px;
-				margin: 100px auto;
+				margin: 50px auto;
 				border: 45px solid #777;
+				-webkit-user-select: none; 
+				-moz-user-select: none;  
+				-ms-user-select: none;
 			}
 			.piece {
 				position: absolute;
 				-webkit-user-select: none; 
 				-moz-user-select: none;  
 				-ms-user-select: none; 
+				transition: all 0.3s;
 			}
 			.piece > div {
 				width:100px;
@@ -125,6 +176,8 @@
 				-webkit-user-select: none; 
 				-moz-user-select: none;  
 				-ms-user-select: none;
+				cursor: move;
+
 			}
 			#piece1 > div {
 				background: #3FACFF;
@@ -170,29 +223,44 @@
 			a:visited {
 				color: #555;
 			}
+			.atl {
+				border-top-left-radius: 25px;
+			}
+			.atr {
+				border-top-right-radius: 25px;
+			}
+			.abl {
+				border-bottom-left-radius: 25px;
+			}
+			.abr {
+				border-bottom-right-radius: 25px;
+			}
 		</style>
 	</head>
 
 	<body>
-	
-		<div id='game'>
-			<div id='top-circle' class='circle'></div>
-			<div id='mask'></div>
-			<div id='piece1' class='piece' width=200 height=100>
-				<div></div><div></div>
+		
+		<div id='center'>
+			<h1>Simplicity</h1>
+			<div id='game'>
+				<div id='top-circle' class='circle'></div>
+				<div id='mask'></div>
+				<div id='piece1' class='piece' width=200 height=100>
+					<div class='atl abl'></div><div class='atr abr'></div>
+				</div>
+				<div id='piece2' class='piece' width=200 height=200>
+					<div class='atl atr'></div><br><div class='abl'></div><div class='atr abr'></div>
+				</div>
+				<div id='piece3' class='piece' width=100 height=200>
+					<div class='atl atr'></div><br><div class='abl abr'></div>
+				</div>
+				<div id='piece4' class='piece' width=200 height=200>
+					<div class='atr'><div class='circle' id='piece-circle'></div></div><br><div class='abl'></div><div class='atr abr'></div>
+				</div>
 			</div>
-			<div id='piece2' class='piece' width=200 height=200>
-				<div></div><br><div></div><div></div>
-			</div>
-			<div id='piece3' class='piece' width=100 height=200>
-				<div></div><br><div></div>
-			</div>
-			<div id='piece4' class='piece' width=200 height=200>
-				<div><div class='circle' id='piece-circle'></div></div><br><div></div><div></div>
-			</div>
+			<center><div id='win'><h2>Win !</h2></div></center><br><br>
+			<center><a target='_blank' href='http://puzzlebeast.com/slidingblock/index.html'>Original sliding-piece puzzle by <b>Jimmy Stephens</b></a></center>
 		</div>
-		<center><div id='win'><h2>Win !</h2></div></center><br><br>
-		<center><a target='_blank' href='http://puzzlebeast.com/slidingblock/index.html'>Simplicity sliding-piece puzzle by <b>Jimmy Stephens</b></a></center>
 	
 	</body>
 </html>
