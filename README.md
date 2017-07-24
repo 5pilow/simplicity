@@ -1,2 +1,2 @@
-# simplicity
-Simplicity simple game
+# Simplicity
+Simplicity simple puzzle game
