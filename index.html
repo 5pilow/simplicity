@@ -51,23 +51,18 @@
 			}
 			
 			var pieceAt = function(x, y) {
-				console.log("piece at " + x + ", " + y)
 				for (var i = 0; i < 4; ++i) {
 					var p = pos[i]
 					if (p[0] == x && p[1] == y) {
-						console.log('piece ' + (i + 1) + ' blocks (1)')
 						return true
 					}
 					if (i == 0 && p[0] + 1 == x && p[1] == y) {
-						console.log('piece ' + (i + 1) + ' blocks (2)')
 						return true
 					}
 					if (i > 0 && p[0] == x && p[1] + 1 == y) {
-						console.log('piece ' + (i + 1) + ' blocks (3)')
 						return true
 					}
 					if (i != 2 && i != 0 && p[0] + 1 == x && p[1] + 1 == y) {
-						console.log('piece ' + (i + 1) + ' blocks (4)')
 						return true
 					}
 				}
@@ -75,13 +70,8 @@
 			}
 			
 			var move = function(dir) {
-				
-				console.log('move ' + dir)
-				
 				for (var i = 0; i < 4; ++i) {
-					console.log('piece ' + (i + 1) + '...')
 					if (canMove(i, dir)) {
-						console.log('ok')
 						if (dir == 'left') pos[i][0]--
 						if (dir == 'up') pos[i][1]--
 						if (dir == 'right') pos[i][0]++
